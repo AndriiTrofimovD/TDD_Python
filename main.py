@@ -1,0 +1,31 @@
+
+class TestCase:
+
+    def __init__(self, name):
+        self.name = name
+
+    def run(self):
+        method = getattr(self, self.name)
+        method()
+
+
+class WasRun(TestCase):
+
+    def __init__(self, name):
+        TestCase.__init__(self, name)
+        self.wasRun = None
+
+    def testMethod(self):
+        self.wasRun = 1
+
+
+class TestCaseTest:
+
+    def testRunning(self):
+        test = WasRun("testMethod")
+        assert not test.wasRun
+        test.run()
+        assert test.wasRun
+
+
+
