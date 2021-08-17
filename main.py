@@ -8,8 +8,12 @@ class TestCase:
         self.setUp()
         method = getattr(self, self.name)
         method()
+        self.tearDown()
 
     def setUp(self):
+        pass
+
+    def tearDown(self):
         pass
 
 
@@ -17,24 +21,27 @@ class WasRun(TestCase):
 
     def __init__(self, name):
         TestCase.__init__(self, name)
+        self.wasRun = None
 
     def testMethod(self):
         self.wasRun = 1
+        self.log += "testMethod "
 
     def setUp(self):
         self.wasRun = None
-        self.wasSetUp = 1
+        self.log = "setUp "
+
+    def tearDown(self):
+        self.log += "tearDown "
 
 
-class TestCaseTest:
+class TestCaseTest(TestCase):
     # Arrange -> Act -> Assert
-    def setUp(self):
+
+    def testTemplateMethod(self):
         self.test = WasRun("testMethod")
-
-    def testRunning(self):
         self.test.run()
-        assert self.test.wasRun
+        assert "setUp testMethod tearDown " == self.test.log
 
-    def testSetUp(self):
-        self.test.run()
-        assert self.test.wasSetUp
+
+TestCaseTest("testTemplateMethod").run()
